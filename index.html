@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samit Weather</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #f39c12, #e74c3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 30px;
+    }
+
+    .weather-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .location {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .temperature {
+      font-size: 4rem;
+      font-weight: 300;
+      margin: 20px 0;
+    }
+
+    .condition {
+      font-size: 1.5rem;
+      text-transform: capitalize;
+      margin-bottom: 10px;
+    }
+
+    .details {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .detail-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .samit-roast {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 2px solid #f39c12;
+    }
+
+    .samit-roast h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #f39c12;
+    }
+
+    .samit-roast p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    .loading, .error {
+      padding: 40px;
+      font-size: 1.2rem;
+    }
+
+    .error {
+      color: #e74c3c;
+    }
+
+    .btn {
+      background: linear-gradient(90deg, #f39c12, #e74c3c);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 30px;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .emoji {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 400px) {
+      h1 { font-size: 2rem; }
+      .temperature { font-size: 3rem; }
+      .details { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Samit Weather</h1>
+    <p class="subtitle">Because the weather isn't as unpredictable as Samit</p>
+
+    <div id="content">
+      <div class="loading">
+        <div class="emoji">🌤️</div>
+        <p>Finding your location...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SAMIT_ROASTS = {
+      hot: [
+        "It's hotter than Samit trying to explain why he's right.",
+        "This heat? Samit levels of unbearable.",
+        "Hotter than Samit's take on literally anything.",
+        "Samit walked outside and said 'damn, even I'm not this fire'.",
+        "It's so hot Samit's brain actually started working.",
+      ],
+      cold: [
+        "Colder than Samit's dead eyes when someone asks him a question.",
+        "This cold? Samit's personality levels of frigid.",
+        "Colder than Samit's response to 'we need to talk'.",
+        "Samit saw this temperature and finally found somewhere he fits in.",
+        "It's so cold even Samit's excuses are freezing up.",
+      ],
+      rain: [
+        "Raining harder than Samit cries during team standup.",
+        "This rain? Samit's confidence levels of pouring.",
+        "Samit looked outside and said 'finally, weather that matches my energy'.",
+        "It's raining so hard Samit thought it was his ideas getting shot down.",
+        "Even the sky is dumping on Samit today.",
+      ],
+      sunny: [
+        "Sunnier than Samit's disposition when he's actually right (rare).",
+        "This sun? Samit's ego levels of bright.",
+        "Samit tried to photosynthesize and failed.",
+        "Bright enough to expose all of Samit's bad takes.",
+        "Samit squinted at the sun and the sun looked away first.",
+      ],
+      cloudy: [
+        "Cloudier than Samit's explanation of his weekend plans.",
+        "These clouds? Samit's future levels of overcast.",
+        "Samit looked at the clouds and finally understood something.",
+        "Cloudy enough to hide Samit from his responsibilities.",
+        "The clouds are confused but still clearer than Samit's priorities.",
+      ],
+      windy: [
+        "Windier than Samit's excuses when he misses a deadline.",
+        "This wind? Samit's hot air levels of blowing.",
+        "Samit's hair has never been more alive.",
+        "The wind is carrying Samit's empty promises away.",
+        "Windy enough to blow Samit's cover.",
+      ],
+      snow: [
+        "Snowing harder than Samit avoids responsibility.",
+        "This snow? Samit's social skills levels of frozen.",
+        "Samit tried to catch a snowflake and it melted from his warmth.",
+        "Finally, weather as cold as Samit's gaming skills.",
+        "It's snowing so much Samit thinks he's in a team building exercise.",
+      ],
+      default: [
+        "The weather is as confusing as Samit's life choices.",
+        "Samit looked at the forecast and said 'mood'.",
+        "This weather? Samit levels of unpredictable.",
+        "Samit would like to apologize for this weather.",
+        "Whatever this is, Samit definitely caused it.",
+      ],
+    };
+
+    function getSamitRoast(condition, temp) {
+      const cond = condition.toLowerCase();
+      let roasts = SAMIT_ROASTS.default;
+
+      if (cond.includes('rain')) roasts = SAMIT_ROASTS.rain;
+      else if (cond.includes('snow')) roasts = SAMIT_ROASTS.snow;
+      else if (cond.includes('cloud')) roasts = SAMIT_ROASTS.cloudy;
+      else if (cond.includes('sun') || cond.includes('clear')) roasts = SAMIT_ROASTS.sunny;
+      else if (cond.includes('wind')) roasts = SAMIT_ROASTS.windy;
+      else if (temp >= 30) roasts = SAMIT_ROASTS.hot;
+      else if (temp <= 5) roasts = SAMIT_ROASTS.cold;
+
+      return roasts[Math.floor(Math.random() * roasts.length)];
+    }
+
+    function getWeatherEmoji(condition) {
+      const cond = condition.toLowerCase();
+      if (cond.includes('thunder')) return '⛈️';
+      if (cond.includes('rain')) return '🌧️';
+      if (cond.includes('snow')) return '❄️';
+      if (cond.includes('cloud')) return '☁️';
+      if (cond.includes('sun') || cond.includes('clear')) return '☀️';
+      if (cond.includes('wind')) return '💨';
+      if (cond.includes('fog')) return '🌫️';
+      return '🌤️';
+    }
+
+    async function fetchWeather(lat, lon) {
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`
+      );
+      return response.json();
+    }
+
+    async function reverseGeocode(lat, lon) {
+      const response = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
+      );
+      return response.json();
+    }
+
+    function renderWeather(data, location) {
+      const current = data.current_weather;
+      const temp = Math.round(current.temperature);
+      const condition = current.weathercode;
+      const windSpeed = current.windspeed;
+
+      // Map weather codes to descriptions
+      const weatherCodes = {
+        0: 'Clear sky',
+        '1-3': 'Partly cloudy',
+        '45,48': 'Foggy',
+        '51-55': 'Drizzle',
+        '61-67': 'Rain',
+        '71-77': 'Snow',
+        '80-82': 'Showers',
+        '95-99': 'Thunderstorm',
+      };
+
+      let conditionText = 'Clear';
+      if (condition >= 95) conditionText = 'Thunderstorm';
+      else if (condition >= 80) conditionText = 'Showers';
+      else if (condition >= 71) conditionText = 'Snow';
+      else if (condition >= 61) conditionText = 'Rain';
+      else if (condition >= 51) conditionText = 'Drizzle';
+      else if (condition >= 45) conditionText = 'Foggy';
+      else if (condition >= 1) conditionText = 'Partly cloudy';
+
+      const city = location.city || location.locality || location.town || 'Your Location';
+      const roast = getSamitRoast(conditionText, temp);
+      const emoji = getWeatherEmoji(conditionText);
+
+      document.getElementById('content').innerHTML = `
+        <div class="weather-card">
+          <div class="location">
+            <span>📍</span>
+            <span>${city}</span>
+          </div>
+          <div class="emoji">${emoji}</div>
+          <div class="temperature">${temp}°C</div>
+          <div class="condition">${conditionText}</div>
+          <div class="details">
+            <div class="detail-item">💨 ${windSpeed} km/h</div>
+            <div class="detail-item">🧥 ${temp < 10 ? 'Bundle up' : temp > 25 ? 'Stay cool' : 'Just right'}</div>
+          </div>
+        </div>
+        <div class="samit-roast">
+          <h3>🎯 Samit Says:</h3>
+          <p>${roast}</p>
+        </div>
+        <button class="btn" onclick="getLocation()">Refresh Samit</button>
+      `;
+    }
+
+    function showError(message) {
+      document.getElementById('content').innerHTML = `
+        <div class="error">
+          <div class="emoji">😬</div>
+          <p>${message}</p>
+          <button class="btn" onclick="getLocation()">Try Again</button>
+        </div>
+      `;
+    }
+
+    function getLocation() {
+      if (!navigator.geolocation) {
+        showError('Your browser is older than Samit\'s outdated takes. Get a new one.');
+        return;
+      }
+
+      document.getElementById('content').innerHTML = `
+        <div class="loading">
+          <div class="emoji">📍</div>
+          <p>Finding you (unlike Samit finding direction in life)...</p>
+        </div>
+      `;
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            const [weatherData, location] = await Promise.all([
+              fetchWeather(latitude, longitude),
+              reverseGeocode(latitude, longitude),
+            ]);
+            renderWeather(weatherData, location);
+          } catch (err) {
+            showError('Could not fetch weather. Even Samit has better luck than this.');
+          }
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              showError('Enable location. Don\'t be a Samit.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              showError('Location unavailable. Samit levels of unhelpful.');
+              break;
+            default:
+              showError('Something went wrong. Classic Samit move.');
+          }
+        }
+      );
+    }
+
+    // Start the app
+    getLocation();
+  </script>
+</body>
+</html>
