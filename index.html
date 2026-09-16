@@ -139,9 +139,45 @@
     }
 
     @media (max-width: 400px) {
+      body {
+        min-height: 100svh;
+        justify-content: flex-start;
+        padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+      }
+
       h1 { font-size: 2rem; }
+
+      .subtitle {
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .weather-card {
+        padding: 22px 16px;
+        margin-bottom: 16px;
+      }
+
       .temperature { font-size: 3rem; }
-      .details { gap: 10px; }
+      .details { gap: 8px; }
+
+      .detail-item {
+        padding: 9px 11px;
+        font-size: 0.85rem;
+      }
+
+      .samit-roast {
+        padding: 16px;
+        margin-top: 16px;
+      }
+
+      .samit-roast p {
+        font-size: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        margin-top: 16px;
+      }
     }
   </style>
 </head>
