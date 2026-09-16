@@ -151,6 +151,48 @@
       margin-top: 8px;
     }
 
+    .outfit-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      margin-top: 16px;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .outfit-card h3 {
+      color: #ffd166;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .outfit-options {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .outfit-option {
+      background: rgba(0, 0, 0, 0.14);
+      border-radius: 11px;
+      padding: 11px;
+    }
+
+    .outfit-label {
+      color: rgba(255, 255, 255, 0.7);
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .outfit-option p {
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
     .loading, .error {
       padding: 40px;
       font-size: 1.2rem;
@@ -242,6 +284,28 @@
       .samit-roast {
         padding: 12px;
         margin-top: 10px;
+      }
+
+      .outfit-card {
+        margin-top: 10px;
+        padding: 12px;
+      }
+
+      .outfit-card h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+
+      .outfit-options {
+        gap: 6px;
+      }
+
+      .outfit-option {
+        padding: 7px;
+      }
+
+      .outfit-option p {
+        font-size: 0.75rem;
       }
 
       .samit-roast h3 {
@@ -429,6 +493,50 @@
       return '🌤️';
     }
 
+    function getOutfitAdvice(temp, condition) {
+      const cond = condition.toLowerCase();
+
+      if (cond.includes('snow')) {
+        return {
+          human: 'Warm coat, gloves, boots, and layers.',
+          samit: 'Swim trunks, flip-flops, and an ice cube for emotional support.',
+        };
+      }
+
+      if (cond.includes('rain') || cond.includes('drizzle') || cond.includes('showers')) {
+        return {
+          human: 'Rain jacket, water-resistant shoes, and an umbrella.',
+          samit: 'A white shirt, suede shoes, and a paper hat.',
+        };
+      }
+
+      if (temp <= 50) {
+        return {
+          human: 'A warm jacket, long pants, and closed-toe shoes.',
+          samit: 'Tank top, shorts, and flip-flops. Confidence is insulation.',
+        };
+      }
+
+      if (temp >= 80) {
+        return {
+          human: 'Light clothes, breathable shoes, sunglasses, and water.',
+          samit: 'A winter coat, wool scarf, and a personal space heater.',
+        };
+      }
+
+      if (cond.includes('wind')) {
+        return {
+          human: 'A light windbreaker and secure shoes.',
+          samit: 'An inflatable costume and a handful of loose receipts.',
+        };
+      }
+
+      return {
+        human: 'A light layer and comfortable shoes should do nicely.',
+        samit: 'A tuxedo with hiking boots. No explanation provided.',
+      };
+    }
+
     async function fetchWeather(lat, lon) {
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto&temperature_unit=fahrenheit&windspeed_unit=mph`
@@ -480,6 +588,7 @@
       const city = location.locality || location.city || location.town || 'Your Location';
       const roast = getSamitRoast(conditionText, temp);
       const emoji = getWeatherEmoji(conditionText);
+      const outfit = getOutfitAdvice(temp, conditionText);
 
       roastContext = { condition: conditionText, temp };
       currentRoast = roast;
@@ -497,6 +606,19 @@
           <div class="details">
             <div class="detail-item">💨 ${windSpeed} km/h</div>
             <div class="detail-item">🧥 ${temp < 10 ? 'Bundle up' : temp > 25 ? 'Stay cool' : 'Just right'}</div>
+          </div>
+        </div>
+        <div class="outfit-card">
+          <h3>👕 What to Wear</h3>
+          <div class="outfit-options">
+            <div class="outfit-option">
+              <span class="outfit-label">Normal human</span>
+              <p>${outfit.human}</p>
+            </div>
+            <div class="outfit-option">
+              <span class="outfit-label">Samit's choice</span>
+              <p>${outfit.samit}</p>
+            </div>
           </div>
         </div>
         <div class="samit-roast">
