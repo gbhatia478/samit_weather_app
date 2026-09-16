@@ -279,7 +279,7 @@
       posthog.capture('weather_loaded', {
         temperature: temp,
         condition: condition,
-        city: location.city || location.locality || location.town || 'Unknown'
+        city: location.locality || location.city || location.town || 'Unknown'
       });
 
       // Map weather codes to descriptions
@@ -303,7 +303,7 @@
       else if (condition >= 45) conditionText = 'Foggy';
       else if (condition >= 1) conditionText = 'Partly cloudy';
 
-      const city = location.city || location.locality || location.town || 'Your Location';
+      const city = location.locality || location.city || location.town || 'Your Location';
       const roast = getSamitRoast(conditionText, temp);
       const emoji = getWeatherEmoji(conditionText);
 
