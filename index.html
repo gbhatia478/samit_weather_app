@@ -763,34 +763,34 @@
       if (cond.includes('rain') || cond.includes('drizzle') || cond.includes('showers')) {
         return {
           human: 'Ramen, soup, or a warm bowl of something comforting.',
-          samit: 'A dry salad eaten under an umbrella while judging the clouds.',
+          samit: 'Ice cubes served with barbecue sauce under an umbrella.',
         };
       }
 
       if (temp >= 80) {
         return {
           human: 'Tacos, fresh fruit, or anything cold and refreshing.',
-          samit: 'A three-course fondue dinner in a wool sweater.',
+          samit: 'A smoked brisket popsicle with a side of molten barbecue sauce.',
         };
       }
 
       if (temp <= 50 || cond.includes('snow')) {
         return {
           human: 'Chili, grilled cheese, or a hot bowl of ramen.',
-          samit: 'A melting popsicle served in a snowbank.',
+          samit: 'Old-fashioned smoked brisket served frozen, Texas-style.',
         };
       }
 
       if (cond.includes('wind')) {
         return {
           human: 'Something handheld that will not blow away—pizza works.',
-          samit: 'A bowl of spaghetti eaten with a leaf blower nearby.',
+          samit: 'A Texas barbecue brisket kite with ribs tied to the tail.',
         };
       }
 
       return {
         human: 'Whatever sounds good—this is excellent patio weather.',
-        samit: 'Plain ice cubes with a side of room-temperature ketchup.',
+        samit: 'A brisket duck: half smoked brisket, half barbecue duck, zero explanation.',
       };
     }
 
