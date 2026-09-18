@@ -180,6 +180,41 @@
       text-align: left;
     }
 
+    .samit-look-card {
+      background: #17191d;
+      border: 1px solid #2b2e33;
+      border-radius: 22px;
+      margin-top: 14px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .samit-look-image {
+      aspect-ratio: 4 / 3;
+      display: block;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .samit-look-caption {
+      padding: 12px 14px 14px;
+    }
+
+    .samit-look-caption strong {
+      color: #f06a4e;
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .samit-look-caption span {
+      color: #d2d4ce;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
     .location {
       color: #bfc2bc;
       font-size: 1rem;
@@ -460,6 +495,27 @@
       .weather-card {
         padding: 14px 12px;
         margin-bottom: 10px;
+      }
+
+      .samit-look-card {
+        margin-top: 10px;
+      }
+
+      .samit-look-image {
+        aspect-ratio: 16 / 10;
+      }
+
+      .samit-look-caption {
+        padding: 9px 11px 10px;
+      }
+
+      .samit-look-caption strong {
+        font-size: 0.64rem;
+        margin-bottom: 3px;
+      }
+
+      .samit-look-caption span {
+        font-size: 0.76rem;
       }
 
       .location {
@@ -854,6 +910,48 @@
       };
     }
 
+    function getSamitLook(temp, condition) {
+      const cond = condition.toLowerCase();
+
+      if (cond.includes('snow') || temp <= 50) {
+        return {
+          image: 'assets/samit/cold.png',
+          label: 'Cold-weather Samit',
+          caption: 'A frozen brisket, three layers, and absolutely no sensible decisions.',
+        };
+      }
+
+      if (cond.includes('rain') || cond.includes('drizzle') || cond.includes('showers')) {
+        return {
+          image: 'assets/samit/rain.png',
+          label: 'Rainy-day Samit',
+          caption: 'Waterproof coat, barbecue umbrella, and goggles for reasons nobody understands.',
+        };
+      }
+
+      if (cond.includes('wind')) {
+        return {
+          image: 'assets/samit/windy.png',
+          label: 'Wind-tested Samit',
+          caption: 'A windbreaker powerful enough to launch a brisket into low orbit.',
+        };
+      }
+
+      if (temp >= 80 || cond.includes('clear')) {
+        return {
+          image: 'assets/samit/sunny.png',
+          label: 'Hot-weather Samit',
+          caption: 'Tiny tank top, sunglasses, and a barbecue-sauce popsicle melting on contact.',
+        };
+      }
+
+      return {
+        image: 'assets/samit/sunny.png',
+        label: 'Mild-weather Samit',
+        caption: 'Dressed for a pleasant day, yet somehow still carrying barbecue equipment.',
+      };
+    }
+
     async function fetchWeather(lat, lon) {
       const response = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto&temperature_unit=fahrenheit&windspeed_unit=mph`
@@ -1028,6 +1126,7 @@
       const emoji = getWeatherEmoji(conditionText);
       const outfit = getOutfitAdvice(temp, conditionText);
       const food = getFoodAdvice(temp, conditionText);
+      const samitLook = getSamitLook(temp, conditionText);
 
       const locationInput = document.getElementById('location-input');
       if (locationInput && !locationInput.value) locationInput.value = city;
@@ -1048,6 +1147,13 @@
           <div class="details">
             <div class="detail-item">💨 ${windSpeed} km/h</div>
             <div class="detail-item">🧥 ${temp < 10 ? 'Bundle up' : temp > 25 ? 'Stay cool' : 'Just right'}</div>
+          </div>
+        </div>
+        <div class="samit-look-card">
+          <img class="samit-look-image" src="${samitLook.image}" alt="Samit dressed for ${conditionText.toLowerCase()} weather">
+          <div class="samit-look-caption">
+            <strong>${samitLook.label}</strong>
+            <span>${samitLook.caption}</span>
           </div>
         </div>
         <div class="outfit-card">
