@@ -649,24 +649,86 @@
 
     @media (max-width: 480px) and (max-height: 850px) {
       body {
-        padding-top: 8px;
+        padding-top: 6px;
       }
 
       .subtitle {
-        margin-bottom: 9px;
+        margin-bottom: 6px;
+      }
+
+      .location-search {
+        margin-bottom: 0;
+      }
+
+      .use-location {
+        padding-bottom: 1px;
+        padding-top: 1px;
       }
 
       .weather-card {
-        padding: 12px;
+        margin-bottom: 6px;
+        padding: 9px 11px;
       }
 
       .temperature {
-        margin: 6px 0 8px;
+        margin: 4px 0 6px;
       }
 
-      .outfit-card,
+      .samit-look-card {
+        margin-top: 6px;
+      }
+
+      .samit-look-image {
+        aspect-ratio: 16 / 7;
+        object-position: center 35%;
+      }
+
+      .samit-look-caption {
+        padding: 6px 10px 7px;
+      }
+
+      .samit-look-caption strong {
+        font-size: 0.6rem;
+        margin-bottom: 1px;
+      }
+
+      .samit-look-caption span {
+        font-size: 0.7rem;
+        line-height: 1.2;
+      }
+
+      /* The image card already communicates Samit's outfit on small screens. */
+      .outfit-card {
+        display: none;
+      }
+
+      .food-card {
+        margin-top: 6px;
+        padding: 9px;
+      }
+
+      .food-options {
+        gap: 5px;
+      }
+
+      .food-option {
+        font-size: 0.7rem;
+        line-height: 1.2;
+        padding: 6px;
+      }
+
       .samit-roast {
-        margin-top: 8px;
+        margin-top: 6px;
+        padding: 9px 10px;
+      }
+
+      .samit-roast p {
+        font-size: 0.88rem;
+        line-height: 1.2;
+      }
+
+      .roast-actions {
+        margin-top: 5px;
       }
     }
   </style>
